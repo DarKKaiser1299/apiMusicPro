@@ -1,0 +1,62 @@
+Cómo consumir la API
+Abrir el archivo HTML en un editor de texto o en un navegador web.
+En la sección <style>, se encuentran los estilos CSS para dar formato a la página. Puedes personalizar estos estilos según tus preferencias.
+En la sección del formulario, encontrarás el siguiente código:
+html
+Copy code
+<form action="" method="POST">
+    <label for="nombre">Nombre del producto:</label>
+    <input type="text" id="nombre" name="nombre" placeholder="Nombre instrumento">
+    <input type="submit" value="Buscar">
+</form>
+Este formulario permite realizar una búsqueda de productos por su nombre. Ingresa el nombre del producto en el campo de texto y haz clic en el botón "Buscar" para enviar el formulario.
+
+En la sección PHP, encontrarás el siguiente código:
+php
+Copy code
+<?php
+if (isset($_POST['nombre'])) {
+    // Obtener el nombre del producto desde el formulario
+    $nombre = $_POST['nombre'];
+
+    // Realizar una solicitud GET para obtener los productos por nombre
+    $url = $apiUrl . '?nombre=' . urlencode($nombre);
+    $response = file_get_contents($url);
+
+    // Procesar la respuesta de la API
+    // ...
+}
+?>
+Este bloque de código se ejecuta cuando se envía el formulario. Obtiene el nombre del producto ingresado en el formulario y realiza una solicitud GET a la API utilizando la URL proporcionada.
+
+En la línea donde se encuentra $apiUrl = 'https://usuario40.talleresmelipilla.cl/integracion_plataformas/pc/apiPropia/envio.php';, reemplaza 'https://usuario40.talleresmelipilla.cl/integracion_plataformas/pc/apiPropia/envio.php' con la URL correcta de la API que deseas consumir.
+
+Después de obtener la respuesta de la API, se procesa utilizando el siguiente código:
+
+php
+Copy code
+if ($response !== false) {
+    $data = json_decode($response, true);
+
+    // Procesar los datos de la respuesta
+    // ...
+}
+Este código verifica si la respuesta de la API es válida y la decodifica del formato JSON a un array asociativo en la variable $data.
+
+Dependiendo de la respuesta de la API, se muestra la información de los productos encontrados o se muestra un mensaje de error. Puedes personalizar la forma en que se muestra la información modificando el siguiente bloque de código:
+php
+Copy code
+if (count($data) > 0) {
+    echo '<h2>Productos encontrados:</h2>';
+    echo '<ul>';
+
+    foreach ($data as $producto) {
+        // Mostrar la información del producto
+        // ...
+    }
+
+    echo '</ul>';
+} else {
+    echo '<p class="no-results">No se encontraron productos con el nombre "' . $nombre . '"</p>';
+}
+Dentro del bucle foreach, puedes acceder a los atributos de cada producto utilizando la variable $producto. Puedes mostrar la información como desees dentro de la etiqueta <li>.
